@@ -12,7 +12,7 @@ import kalmanfilter
 
 def main():
 
-    col_left, col_center, col_right = st.columns((2, 3, 1))
+    col_left, col_center, col_right, col_dummy = st.columns((2, 3, 1, 2))
 
 
     col_left.markdown("System dynamics:")
@@ -33,7 +33,7 @@ def main():
     col_left.markdown("Important distributions:")
     col_left.latex(r"""
         \begin{aligned}
-        p(x_0) &= \mathcal{N}(x_0; x_0^-, \sigma_p^2)\\
+        p(x_0) &= \mathcal{N}(x_0; x_0, \sigma_p^2)\\
         p(y_0|x_0) &= \mathcal{N}(y_0; x_0, \sigma_r^2)\\
         p(x_0|y_0) &= \frac{p(y_0|x_0)p(y_0)}{p(y_0)}\\
         x_1 &= 2x_0 + w_0
@@ -142,8 +142,15 @@ def main():
         row=2, col=1
         )
 
+    fig.update_xaxes(title_text="x", row=2, col=1)
+    fig.update_yaxes(title_text="p( . )", row=1, col=1)
+    fig.update_yaxes(title_text="p( . )", row=2, col=1)
 
-    fig.update_layout(height=600, template='plotly_dark')
+
+
+    fig.update_layout(height=800, template='plotly_dark',
+        margin={"r":0,"t":0,"l":0,"b":0}
+    )
     col_center.plotly_chart(fig, use_container_width=True)
 
 

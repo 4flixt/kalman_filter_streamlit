@@ -1,7 +1,6 @@
 # %% 
 
 import streamlit as st
-import pandas as pd
 import numpy as np
 from scipy.linalg import expm
 import pdb
@@ -33,7 +32,7 @@ def main():
     uk = np.array([4]).reshape(-1,1)
 
 
-    col_left, col_center, col_right = st.columns((2, 3, 1))
+    col_left, col_center, col_right, col_dummy = st.columns((2, 3, 1, 2))
 
     n_options = 100
     options = np.logspace(-5, 0, n_options)
@@ -161,7 +160,9 @@ def main():
     fig.update_yaxes(title_text="c_b [kmol/l]", row=2, col=1)
     fig.update_yaxes(title_text="c_c [kmol/l]", row=3, col=1)
 
-    fig.update_layout(height=600, width=1000, template='plotly_dark', title='Estimated vs. true state')
+    fig.update_layout(height=800, template='plotly_dark',
+        margin={"r":0,"t":0,"l":0,"b":0}
+    )
     col_center.plotly_chart(fig, use_container_width=True)
 
 
