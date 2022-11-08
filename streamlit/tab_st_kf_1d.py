@@ -25,20 +25,26 @@ def main():
     col_left.markdown("With random variables:")
     col_left.latex(r"""
         \begin{aligned}
-        x_0 &\sim \mathcal{N}(0, \sigma_p^2)\\
-        w_0 &\sim \mathcal{N}(0, \sigma_q^2)\\
-        v_0 &\sim \mathcal{N}(0, \sigma_r^2)
+        x_0 &\sim \mathcal{N}(x_0; \hat x_0^{-}, \sigma_p^2)\\
+        w_0 &\sim \mathcal{N}(w_0; 0, \sigma_q^2)\\
+        v_0 &\sim \mathcal{N}(v_0; 0, \sigma_r^2)
         \end{aligned}        
         """)
     col_left.markdown("Important distributions:")
     col_left.latex(r"""
         \begin{aligned}
-        p(x_0) &= \mathcal{N}(x_0; x_0, \sigma_p^2)\\
+        p(x_0) &= \mathcal{N}(x_0; \hat x_0^{-1}, \sigma_p^2)\\
         p(y_0|x_0) &= \mathcal{N}(y_0; x_0, \sigma_r^2)\\
         p(x_0|y_0) &= \frac{p(y_0|x_0)p(y_0)}{p(y_0)}\\
         x_1 &= 2x_0 + w_0
         \end{aligned}        
         """)
+
+    multiselect_options = col_right.multiselect(
+        'Show',
+        ['y0', 'x0', 'x0_hat', 'x1_hat'],
+        ['x0']
+    )
 
 
     n_options = 100
@@ -55,14 +61,15 @@ def main():
 
     options_sigma = np.logspace(-2, 0, n_options)
 
-    col_right.markdown("Process noise $\sigma_q$")
-    slide_sigma_q = col_right.select_slider(
-            label="sigma_q (process noise)",
-            label_visibility = 'collapsed',
+    col_right.markdown("Initial state $\sigma_p$")
+    slide_sigma_p = col_right.select_slider(
+            label="sigma_p (initial state covariance)",
             options = options_sigma,
+            label_visibility = 'collapsed',
             format_func = lambda x: f'{x:.2e}',
             value=options_sigma[n_options//2],
         )
+
     col_right.markdown("Meas noise $\sigma_r$")
     slide_sigma_r = col_right.select_slider(
             label="sigma_r (measurement noise)",
@@ -72,11 +79,11 @@ def main():
             value=options_sigma[n_options//2],
         )
 
-    col_right.markdown("Initial state $\sigma_p$")
-    slide_sigma_p = col_right.select_slider(
-            label="sigma_p (initial state covariance)",
-            options = options_sigma,
+    col_right.markdown("Process noise $\sigma_q$")
+    slide_sigma_q = col_right.select_slider(
+            label="sigma_q (process noise)",
             label_visibility = 'collapsed',
+            options = options_sigma,
             format_func = lambda x: f'{x:.2e}',
             value=options_sigma[n_options//2],
         )
@@ -107,40 +114,44 @@ def main():
     fig = make_subplots(rows=2, cols=1, shared_xaxes=True, shared_yaxes=True)
 
     # Add traces
-    fig.add_trace(
-        go.Scatter(x=x_linspace, y=x0_pdf, name='p(x0)', fill='tozeroy'),
-        row=1, col=1)
-    fig.add_trace(
-        go.Scatter(x=x_linspace, y=y0_pdf, name='p(y0)', fill='tozeroy'),
-        row=1, col=1)
-    fig.add_trace(
-        go.Scatter(x=x_linspace, y=x0_hat_pdf, name='p(x0|y0)', fill='tozeroy'),
-        row=1, col=1)
+    if 'x0' in multiselect_options:
+        fig.add_trace(
+            go.Scatter(x=x_linspace, y=x0_pdf, name='p(x0)', fill='tozeroy'),
+            row=1, col=1)
+    if 'y0' in multiselect_options:
+        fig.add_trace(
+            go.Scatter(x=x_linspace, y=y0_pdf, name='p(y0|x0)', fill='tozeroy'),
+            row=1, col=1)
+    if 'x0_hat' in multiselect_options:
+        fig.add_trace(
+            go.Scatter(x=x_linspace, y=x0_hat_pdf, name='p(x0|y0)', fill='tozeroy'),
+            row=1, col=1)
 
-    fig.add_vline(x=x0_hat_dist.mu[0,0], 
-        line_dash="dash", 
-        line_width=2,
-        line_color="white",
-        row=1, col=1
-        )
-        
-    fig.add_trace(
-        go.Scatter(x=x_linspace, y=x1_pdf, name='p(x1)', fill='tozeroy'),
-        row=2, col=1)
+        fig.add_vline(x=x0_hat_dist.mu[0,0], 
+            line_dash="dash", 
+            line_width=2,
+            line_color="white",
+            row=1, col=1
+            )
 
-    fig.add_vline(x=x0_hat_dist.mu[0,0], 
-        line_dash="dash", 
-        line_width=2,
-        line_color="white",
-        row=2, col=1
-        )
-    fig.add_vline(x=x1_dist.mu[0,0], 
-        line_dash="solid", 
-        name="x1",
-        line_width=2,
-        #line_color="white",
-        row=2, col=1
-        )
+    if 'x1_hat' in multiselect_options:
+        fig.add_trace(
+            go.Scatter(x=x_linspace, y=x1_pdf, name='p(x1)', fill='tozeroy'),
+            row=2, col=1)
+
+        fig.add_vline(x=x0_hat_dist.mu[0,0], 
+            line_dash="dash", 
+            line_width=2,
+            line_color="white",
+            row=2, col=1
+            )
+        fig.add_vline(x=x1_dist.mu[0,0], 
+            line_dash="solid", 
+            name="x1",
+            line_width=2,
+            #line_color="white",
+            row=2, col=1
+            )
 
     fig.update_xaxes(title_text="x", row=2, col=1)
     fig.update_yaxes(title_text="p( . )", row=1, col=1)
@@ -149,7 +160,7 @@ def main():
 
 
     fig.update_layout(height=800, template='plotly_dark',
-        margin={"r":0,"t":0,"l":0,"b":0}
+        margin={"r":0,"t":30,"l":0,"b":0}
     )
     col_center.plotly_chart(fig, use_container_width=True)
 
