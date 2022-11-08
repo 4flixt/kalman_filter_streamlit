@@ -42,8 +42,8 @@ def main():
 
     multiselect_options = col_right.multiselect(
         'Show',
-        ['y0', 'x0', 'x0_hat', 'x1_hat'],
-        ['x0']
+        ['p(y0|x0)', 'p(x0)', 'p(x0|y0)', 'p(x1)'],
+        ['p(x0)']
     )
 
 
@@ -114,15 +114,15 @@ def main():
     fig = make_subplots(rows=2, cols=1, shared_xaxes=True, shared_yaxes=True)
 
     # Add traces
-    if 'x0' in multiselect_options:
+    if 'p(x0)' in multiselect_options:
         fig.add_trace(
             go.Scatter(x=x_linspace, y=x0_pdf, name='p(x0)', fill='tozeroy'),
             row=1, col=1)
-    if 'y0' in multiselect_options:
+    if 'p(y0|x0)' in multiselect_options:
         fig.add_trace(
             go.Scatter(x=x_linspace, y=y0_pdf, name='p(y0|x0)', fill='tozeroy'),
             row=1, col=1)
-    if 'x0_hat' in multiselect_options:
+    if 'p(x0|y0)' in multiselect_options:
         fig.add_trace(
             go.Scatter(x=x_linspace, y=x0_hat_pdf, name='p(x0|y0)', fill='tozeroy'),
             row=1, col=1)
@@ -134,7 +134,7 @@ def main():
             row=1, col=1
             )
 
-    if 'x1_hat' in multiselect_options:
+    if 'p(x1)' in multiselect_options:
         fig.add_trace(
             go.Scatter(x=x_linspace, y=x1_pdf, name='p(x1)', fill='tozeroy'),
             row=2, col=1)

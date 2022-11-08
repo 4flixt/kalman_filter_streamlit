@@ -40,8 +40,6 @@ def main():
         ['x']
     )
 
-    st.write('You selected:', multiselect_options)
-
     n_options = 100
     options = np.logspace(-5, 0, n_options)
     col_right.markdown("Process noise $\sigma_q$")
