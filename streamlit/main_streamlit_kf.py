@@ -9,22 +9,22 @@ import plotly.express as px
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 
-import kf_streamlit
-import prob_streamlit
+import tab_st_kf_1d
+import tab_st_kf_cstr
 
 def main():
     tab1, tab2 = st.tabs(["One step scalar KF", "CSTR KF"])
 
     with tab1:
-        prob_streamlit.main()
+        tab_st_kf_1d.main()
 
     with tab2:
-        kf_streamlit.main()
+        tab_st_kf_cstr.main()
 
 
 if __name__ == "__main__":
     st.set_page_config(
-        page_title="Kalman Filter",
+        page_title="Kalman filter",
         layout="wide"
     )
 
