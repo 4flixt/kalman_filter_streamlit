@@ -33,7 +33,7 @@ def main():
     col_left.markdown("Important distributions:")
     col_left.latex(r"""
         \begin{aligned}
-        p(x_0) &= \mathcal{N}(x_0; x_0, \sigma_p^2)\\
+        p(x_0) &= \mathcal{N}(x_0; x_0^-, \sigma_p^2)\\
         p(y_0|x_0) &= \mathcal{N}(y_0; x_0, \sigma_r^2)\\
         p(x_0|y_0) &= \frac{p(y_0|x_0)p(y_0)}{p(y_0)}\\
         x_1 &= 2x_0 + w_0
