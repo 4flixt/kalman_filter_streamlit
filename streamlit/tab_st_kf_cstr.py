@@ -87,9 +87,9 @@ def main():
     col_left.markdown("With random variables:")
     col_left.latex(r"""
         \begin{aligned}
-        x_0 &\sim \mathcal{N}(0, \sigma_p^2 I)\\
-        w_k &\sim \mathcal{N}(0, \sigma_q^2 I)\\
-        v_k &\sim \mathcal{N}(0, \sigma_r^2 I)
+        x_0 &\sim \mathcal{N}(x_0; \hat x_0^{-}, P)\\
+        w_k &\sim \mathcal{N}(w_k; 0, Q)\\
+        v_k &\sim \mathcal{N}(v_k; 0, R)
         \end{aligned}        
         """)
 

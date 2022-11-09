@@ -30,21 +30,31 @@ def main():
         v_0 &\sim \mathcal{N}(v_0; 0, \sigma_r^2)
         \end{aligned}        
         """)
-    col_left.markdown("Important distributions:")
-    col_left.latex(r"""
-        \begin{aligned}
-        p(x_0) &= \mathcal{N}(x_0; \hat x_0^{-1}, \sigma_p^2)\\
-        p(y_0|x_0) &= \mathcal{N}(y_0; x_0, \sigma_r^2)\\
-        p(x_0|y_0) &= \frac{p(y_0|x_0)p(y_0)}{p(y_0)}\\
-        x_1 &= 2x_0 + w_0
-        \end{aligned}        
-        """)
 
     multiselect_options = col_right.multiselect(
         'Show',
         ['p(y0|x0)', 'p(x0)', 'p(x0|y0)', 'p(x1)'],
         ['p(x0)']
     )
+
+    col_left.markdown("Important distributions:")
+    col_left.latex(r"""
+        p(x_0) = \mathcal{N}(x_0; \hat x_0^{-}, \sigma_p^2)       
+        """)
+    if 'p(y0|x0)' in multiselect_options:
+        col_left.latex(r"""
+            p(y_0|x_0) = \mathcal{N}(y_0; x_0, \sigma_r^2)
+            """)
+    if 'p(x0|y0)' in multiselect_options:
+        col_left.latex(r"""
+            p(x_0|y_0)= \frac{p(y_0|x_0)p(x_0)}{p(y_0)}      
+            """)
+    if 'p(x1)' in multiselect_options:
+        col_left.latex(r"""
+            x_1 = 2x_0 + w_0      
+            """)
+
+    
 
 
     n_options = 100
@@ -153,7 +163,8 @@ def main():
             row=2, col=1
             )
 
-    fig.update_xaxes(title_text="x", row=2, col=1)
+        fig.update_xaxes(title_text="x1", row=2, col=1)
+    fig.update_xaxes(title_text="x0", row=1, col=1)
     fig.update_yaxes(title_text="p( . )", row=1, col=1)
     fig.update_yaxes(title_text="p( . )", row=2, col=1)
 
